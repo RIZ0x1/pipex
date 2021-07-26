@@ -1,15 +1,15 @@
 #!/bin/bash
 
-# FONTS
+#FONTS
 NORMAL="\033[0m"
 RED="\033[31;1;1m"
 RED_BLINK="\033[31;1;5m"
 GREEN="\033[32m"
 BLUE="\033[34m"
-# USEFUL VARS
+#USEFUL VARS
 EXEC=./pipex
 
-# WELCOME
+#WELCOME
 clear
 echo $RED_BLINK
 echo "
@@ -22,7 +22,7 @@ echo "
  ▀ "
 echo $NORMAL
 
-# START
+#START
 #   COMPILING
 echo $BLUE
 echo "************************************************************"
@@ -37,8 +37,12 @@ echo $NORMAL
 if [ ! -f ./infile ] ; then touch ./infile && IN=1 ; fi
 if [ ! -f ./outfile ] ; then touch ./outfile && OUT=1 ; fi
 
+#   TEST CASES
+$(< infile ls | wc -c > outfile) > .tmp_pipex_file_1
+$(./pipex infile ''ls'' ''wc -c'' outfile) > .tmp_pipex_file_2
+diff .tmp_pipex_file_1 .tmp_pipex_file_2
 
-
+rm .tmp_pipex_file_1 .tmp_pipex_file_2
 #   DELETE IN- OR/AND OUTFILE IF THEY WERE CREATED BY THIS SCRIPT
 if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
 if [ "$OUT" = 1 ] ; then rm -f ./outfile ; fi
