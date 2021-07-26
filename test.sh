@@ -6,8 +6,14 @@ RED="\033[31;1;1m"
 RED_BLINK="\033[31;1;5m"
 GREEN="\033[32m"
 BLUE="\033[34m"
+
 #USEFUL VARS
 EXEC=./pipex
+HIDDEN_PIPEX=./.pipex_file
+HIDDEN_SHELL=./.shell_file
+
+declare -a TESTS_SHELL=( "< infile ls | wc -c > outfile" )
+declare -a TESTS_PIPEX=( "./pipex infile ''ls'' ''wc -c'' outfile" )
 
 #WELCOME
 clear
@@ -38,11 +44,22 @@ if [ ! -f ./infile ] ; then touch ./infile && IN=1 ; fi
 if [ ! -f ./outfile ] ; then touch ./outfile && OUT=1 ; fi
 
 #   TEST CASES
-$(< infile ls | wc -c > outfile) > .tmp_pipex_file_1
-$(./pipex infile ''ls'' ''wc -c'' outfile) > .tmp_pipex_file_2
-diff .tmp_pipex_file_1 .tmp_pipex_file_2
 
-rm .tmp_pipex_file_1 .tmp_pipex_file_2
+for i in "${TESTS_SHELL[@]}" ;
+do
+	$($TESTS_SHELL) > $HIDDEN_SHELL
+	$($TESTS_PIPEX) > $HIDDEN_PIPEX
+	RESULT=$(diff $HIDDEN_SHELL $HIDDEN_PIPEX)
+
+	if [ -z $RESULT ]; then
+		echo $OK
+	else
+		echo $KO
+	fi
+done
+
+rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
+
 #   DELETE IN- OR/AND OUTFILE IF THEY WERE CREATED BY THIS SCRIPT
 if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
 if [ "$OUT" = 1 ] ; then rm -f ./outfile ; fi
