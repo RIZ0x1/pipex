@@ -14,7 +14,7 @@ HIDDEN_SHELL=./.shell_file
 
 IFS='#'
 TESTS_SHELL="< infile ls | wc -c > outfile # < infile cat | wc -c > outfile"
-TESTS_PIPEX="./pipex infile ''ls'' ''wc -c'' outfile # ./pipex infile 'cat' | 'wc -c' outfile"
+TESTS_PIPEX="./pipex infile 'ls' 'wc -c' outfile # ./pipex infile 'cat' | 'wc -c' outfile"
 
 #WELCOME
 clear
@@ -37,6 +37,7 @@ echo "************************************************************"
 make all
 make clean
 
+echo $BLUE
 echo "************************************************************"
 echo $NORMAL
 

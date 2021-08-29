@@ -1,25 +1,26 @@
 #include "header.h"
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
-	int		fd_1;
-	int		fd_2;
-	int		exit;
+	int	exit;
+	int	fds[2];
+	int	pid;
 
 	errno = 0;
-	exit = EXIT_SUCCESS;
+	exit = 0;
 	if (argc == 5)
 	{
-		fd_1 = open(argv[1], O_RDONLY);
-		fd_2 = open(argv[4], O_WRONLY);
-
-		
-
-		close(fd_1);
-		close(fd_2);
+		if (pipe(fds) == -1)
+			return (the_end(0));
+		pid = fork();
+		if (pid == -1)
+			return (the_end(0));
+		if (pid == 0)
+			child_process(fds, argv, envp);
+		else
+			parent_process(fds, argv, envp);
 	}
 	else
-		exit = EXIT_FAILURE;
-
+		exit = ERR_ARG;
 	return (the_end(exit));
 }

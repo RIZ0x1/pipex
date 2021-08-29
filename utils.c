@@ -1,24 +1,32 @@
 #include "header.h"
 
-unsigned	ft_strlen(char *str)
-{
-	unsigned	n;
-
-	n = 0;
-	while (*(str + n))
-		(n++);
-	return (n);
-}
-
 int			the_end(int exit)
 {
 	char	*error;
 
-	if (exit != 0)
+	if (errno || exit)
+		write(2, "Error: ", 7);
+	if (errno != 0)
 	{
 		error = strerror(errno);
 		write(2, error, ft_strlen(error));
 		write(2, "\n", 1);
+		return (errno);
 	}
-	return (-1);
+	if (exit != 0)
+	{
+		if (exit == ERR_ARG)
+			write(2, "Wrong number of arguments\n", 26U);
+	}
+	return (1);
+}
+
+void		child_process(int fds[2], char **argv, char **envp)
+{
+	;
+}
+
+void		parent_process(int fds[2], char **argv, char **envp)
+{
+	;
 }
