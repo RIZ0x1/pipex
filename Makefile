@@ -4,8 +4,9 @@ NAME	=	pipex
 SRCS	=	main.c utils.c
 OBJS	=	main.o utils.o
 HDRS	=	header.h
+TEST	=	test.sh
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test
 
 all: $(NAME)
 
@@ -22,3 +23,6 @@ $(NAME): $(OBJS)
 
 $(OBJS): $(SRCS) $(HDRS)
 	$(CC) $(CFLAGS) $(SRCS) -c
+
+test:
+	sh $(TEST)

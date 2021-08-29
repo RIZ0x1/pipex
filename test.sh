@@ -12,8 +12,9 @@ EXEC=./pipex
 HIDDEN_PIPEX=./.pipex_file
 HIDDEN_SHELL=./.shell_file
 
-declare -a TESTS_SHELL=( "< infile ls | wc -c > outfile" )
-declare -a TESTS_PIPEX=( "./pipex infile ''ls'' ''wc -c'' outfile" )
+IFS='#'
+TESTS_SHELL="< infile ls | wc -c > outfile # < infile cat | wc -c > outfile"
+TESTS_PIPEX="./pipex infile ''ls'' ''wc -c'' outfile # ./pipex infile 'cat' | 'wc -c' outfile"
 
 #WELCOME
 clear
@@ -45,10 +46,10 @@ if [ ! -f ./outfile ] ; then touch ./outfile && OUT=1 ; fi
 
 #   TEST CASES
 
-for i in "${TESTS_SHELL[@]}" ;
+for i in $TESTS_SHELL ;
 do
-	$($TESTS_SHELL) > $HIDDEN_SHELL
-	$($TESTS_PIPEX) > $HIDDEN_PIPEX
+	eval $TESTS_SHELL > $HIDDEN_SHELL
+	eval $TESTS_PIPEX > $HIDDEN_PIPEX
 	RESULT=$(diff $HIDDEN_SHELL $HIDDEN_PIPEX)
 
 	if [ -z $RESULT ]; then
