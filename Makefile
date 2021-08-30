@@ -1,6 +1,6 @@
 CC		?=	gcc
 CFLAGS	:=	-g #-Wall -Wextra -Werror
-LIB		=	-L ./libft/srcs/ -l ft
+LIB		=	-L ./libft/ -l ft
 NAME	=	pipex
 SRCS	=	main.c utils.c
 OBJS	=	main.o utils.o
@@ -19,11 +19,14 @@ fclean: clean
 
 re: fclean all
 
+test:
+	sh $(TEST)
+
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) $(LIB) -o $(NAME)
 
 $(OBJS): $(SRCS) $(HDRS)
 	$(CC) $(CFLAGS) $(SRCS) -c
 
-test:
-	sh $(TEST)
+$(LIB): ./libft/libft.a
+	make -C ./libft/

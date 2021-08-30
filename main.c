@@ -16,9 +16,9 @@ int	main(int argc, char **argv, char **envp)
 		if (pid == -1)
 			return (the_end(0));
 		if (pid == 0)
-			child_process(fds, argv, envp);
+			child_process(fds, argv[1], argv[2], envp);
 		else
-			parent_process(fds, argv, envp);
+			parent_process(fds, argv[3], argv[4], envp);
 	}
 	else
 		exit = ERR_ARG;

@@ -1,11 +1,11 @@
 #include "header.h"
 
-int			the_end(int exit)
+int	the_end(int exit)
 {
 	char	*error;
 
 	if (errno || exit)
-		write(2, "Error: ", 7);
+		write(2, "Error: ", 7U);
 	if (errno != 0)
 	{
 		error = strerror(errno);
@@ -21,12 +21,17 @@ int			the_end(int exit)
 	return (1);
 }
 
-void		child_process(int fds[2], char **argv, char **envp)
+void	child_process(int fds[2], char *arg1, char *arg2, char **envp)
 {
-	;
+	close(fds[0]);
+	dup2(fds[1], 1);
+	
 }
 
-void		parent_process(int fds[2], char **argv, char **envp)
+void	parent_process(int fds[2], char *arg3, char *arg4, char **envp)
 {
-	;
+	int	file;
+
+	file = open(arg3, O_RDONLY);
+	
 }
