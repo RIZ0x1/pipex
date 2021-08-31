@@ -18,8 +18,6 @@ int	the_end(int exit)
 	}
 	if (exit == ERR_ARG)
 		write(2, "Wrong number of arguments\n", 26U);
-	if (exit == ERR_FILE)
-		write(2, "Cannot open file\n", 17U);
 	if (exit == ERR_NOTFOUND)
 		write(2, "pipex: command not found\n", 25);
 	return ((errno || exit));

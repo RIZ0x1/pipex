@@ -20,7 +20,7 @@ int	main(int argc, char **argv, char **envp)
 		if (pid == CHILD)
 			child_process(fds, argv[1], argv[2], envp);
 		else
-			parent_process(fds, argv[3], argv[4], envp);
+			parent_process(fds, argv[3], argv[4], envp, pid);
 	}
 	else
 		exit = ERR_ARG;
