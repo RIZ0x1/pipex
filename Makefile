@@ -1,7 +1,7 @@
 CC		?=	gcc
 CFLAGS	:=	-g #-Wall -Wextra -Werror
-LIB		=	-L ./libft/ -l ft
 NAME	=	pipex
+LIB		=	-L ./libft/ -l ft
 SRCS	=	main.c utils.c
 OBJS	=	main.o utils.o
 HDRS	=	header.h

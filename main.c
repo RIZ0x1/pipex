@@ -1,5 +1,7 @@
 #include "header.h"
 
+#define CHILD 0
+
 int	main(int argc, char **argv, char **envp)
 {
 	int	exit;
@@ -15,7 +17,7 @@ int	main(int argc, char **argv, char **envp)
 		pid = fork();
 		if (pid == -1)
 			return (the_end(0));
-		if (pid == 0)
+		if (pid == CHILD)
 			child_process(fds, argv[1], argv[2], envp);
 		else
 			parent_process(fds, argv[3], argv[4], envp);
