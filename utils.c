@@ -19,8 +19,53 @@ int	the_end(int exit)
 	if (exit == ERR_ARG)
 		write(2, "Wrong number of arguments\n", 26U);
 	if (exit == ERR_NOTFOUND)
-		write(2, "pipex: command not found\n", 25);
+		write(2, "pipex: command not found\n", 25U);
 	return ((errno || exit));
+}
+
+char	**get_path_var(char **envp)
+{
+	char	*var;
+	int	i;
+
+	i = 0;
+	while (envp[i])
+	{
+		var = ft_strnstr(envp[i], "PATH=", 5);
+		if (var)
+			return (ft_split(&var[6], ':'));
+		(i++);
+	}
+	return (NULL);
+}
+
+char	*get_full_path(char *command, char **envp)
+{
+	char	**path;
+	char	*joined;
+	char	*tmp;
+	short int	i;
+
+	joined = NULL;
+	path = get_path_var(envp);
+	tmp = ft_strjoin("/", command);
+	i = 0;
+	while (path[i])
+	{
+		joined = ft_strjoin(path[i], tmp);
+		if (!access(joined, F_OK | X_OK))
+		{
+			break ;
+		}
+		else
+		{
+			free(joined);
+			joined = NULL;
+		}
+		(i++);
+	}
+	free(tmp);
+	return (joined);
 }
 
 void	child_process(int fds[2], char *arg1, char *arg2, char **envp)
@@ -44,8 +89,8 @@ void	parent_process(int fds[2], char *arg3, char *arg4, char **envp, int child_p
 	int		file;
 	char	**command;
 
-	waitpid(child_pid, NULL, NULL);
-	file = open(arg3, O_WRONLY | O_CREAT | O_TRUNC);
+	waitpid(child_pid, NULL, 0);
+	file = open(arg4, O_WRONLY | O_CREAT | O_TRUNC);
 	if (file == -1)
 		the_end(0);
 	dup2(fds[0], IN);
