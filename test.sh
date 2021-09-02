@@ -12,13 +12,17 @@ EXEC=./pipex
 HIDDEN_PIPEX=./.pipex_file
 HIDDEN_SHELL=./.shell_file
 
-IFS='#'
-TESTS_SHELL="< infile ls | wc -c > outfile # < infile cat | wc -c > outfile"
-TESTS_PIPEX="./pipex infile 'ls' 'wc -c' outfile # ./pipex infile 'cat' | 'wc -c' outfile"
+TESTS_N=2
+
+declare -a TESTS_SHELL=( " < infile ls | wc -c > outfile "
+		" < infile cat | wc -c > outfile " )
+
+declare -a TESTS_PIPEX=( "./pipex infile 'ls' 'wc -c' outfile "
+		"./pipex infile 'cat' 'wc -c' outfile" )
+
 
 #WELCOME
 clear
-echo $RED_BLINK
 echo "
   ▘             ▝▜                   ▗           ▗          
  ▄▖  ▄▖  ▄▖  ▖▄  ▐   ▄▖ ▗▗▖  ▄▖     ▗▟▄  ▄▖  ▄▖ ▗▟▄  ▄▖  ▖▄ 
@@ -27,19 +31,15 @@ echo "
   ▌ ▝▙▞ ▝▄▜  ▌   ▝▄ ▝▙▞ ▐ ▐ ▝▄▜      ▝▄ ▝▙▞ ▝▄▞  ▝▄ ▝▙▞  ▌  
   ▌                                                         
  ▀ "
-echo $NORMAL
 
 #START
 #   COMPILING
-echo $BLUE
 echo "************************************************************"
 
 make all
 make clean
 
-echo $BLUE
 echo "************************************************************"
-echo $NORMAL
 
 #   CREATE IN- AND OUTFILE IF DOES NOT EXISTS
 if [ ! -f ./infile ] ; then touch ./infile && IN=1 ; fi
@@ -47,17 +47,21 @@ if [ ! -f ./outfile ] ; then touch ./outfile && OUT=1 ; fi
 
 #   TEST CASES
 
-for i in $TESTS_SHELL ;
+i=0
+while [ $i -le $TESTS_N ]
 do
-	eval $TESTS_SHELL > $HIDDEN_SHELL
-	eval $TESTS_PIPEX > $HIDDEN_PIPEX
-	RESULT=$(diff $HIDDEN_SHELL $HIDDEN_PIPEX)
+	eval ${TESTS_SHELL[$i]} > $HIDDEN_SHELL
+	eval ${TESTS_PIPEX[$i]} > $HIDDEN_PIPEX
 
-	if [ -z $RESULT ]; then
-		echo $OK
+	RESULT=$(diff $HIDDEN_SHELL $HIDDEN_PIPEX)
+	if [ -z "$RESULT" ]; then
+		echo "[$i] - OK"
+		echo ''
 	else
-		echo $KO
+		echo "[$i] - ERROR"
+		echo ''
 	fi
+	((i++))
 done
 
 rm -f $HIDDEN_PIPEX $HIDDEN_SHELL

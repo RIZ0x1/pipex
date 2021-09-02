@@ -15,7 +15,6 @@ int	main(int argc, char **argv, char **envp)
 		if (pipe(fds) == -1)
 			return (the_end(0));
 		pid = fork();
-		dprintf(2, "Realy nigga?\n");
 		if (pid == -1)
 			return (the_end(0));
 		if (pid == CHILD)
