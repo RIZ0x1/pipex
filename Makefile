@@ -20,7 +20,7 @@ fclean: clean
 re: fclean all
 
 test:
-	sh $(TEST)
+	bash $(TEST)
 
 $(NAME): $(OBJS)
 	$(CC) $(OBJS) $(LIB) -o $(NAME)
