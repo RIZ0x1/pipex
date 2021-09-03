@@ -1,71 +1,87 @@
 #!/bin/bash
 
 #FONTS
-NORMAL="\033[0m"
-RED="\033[31;1;1m"
-RED_BLINK="\033[31;1;5m"
-GREEN="\033[32m"
-BLUE="\033[34m"
+NORMAL="\e[0m"
+RED="\e[31;1;1m"
+RED_BLINK="\e[31;1;5m"
+GREEN="\e[32m"
+BLUE="\e[34m"
+YELLOW="\e[33m"
 
 #USEFUL VARS
 EXEC=./pipex
-HIDDEN_PIPEX=./.pipex_file
-HIDDEN_SHELL=./.shell_file
+HIDDEN_SHELL=.shell_file
+HIDDEN_PIPEX=.pipex_file
 
-TESTS_N=2
+declare -a TESTS_SHELL=(
+		" < infile ls | wc -c > $HIDDEN_SHELL "
+		" < infile cat | wc -c > $HIDDEN_SHELL " 
+		" < infile grep 1 | wc -c > $HIDDEN_SHELL " 
+		" < infile ping -c 2 google.com | wc -w > $HIDDEN_SHELL")
 
-declare -a TESTS_SHELL=( " < infile ls | wc -c > outfile "
-		" < infile cat | wc -c > outfile " )
+declare -a TESTS_PIPEX=(
+		"./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX "
+		"./pipex infile 'cat' 'wc -c' $HIDDEN_PIPEX" 
+		"./pipex infile 'grep 1' 'wc -c' $HIDDEN_PIPEX"
+		"./pipex infile 'ping -c 2 google.com' 'wc -w' $HIDDEN_PIPEX" )
 
-declare -a TESTS_PIPEX=( "./pipex infile 'ls' 'wc -c' outfile "
-		"./pipex infile 'cat' 'wc -c' outfile" )
-
+TESTS_N=3
 
 #WELCOME
 clear
-echo "
+printf "$RED_BLINK
   ▘             ▝▜                   ▗           ▗          
  ▄▖  ▄▖  ▄▖  ▖▄  ▐   ▄▖ ▗▗▖  ▄▖     ▗▟▄  ▄▖  ▄▖ ▗▟▄  ▄▖  ▖▄ 
   ▌ ▐▘▝ ▝ ▐  ▛ ▘ ▐  ▐▘▐ ▐▘▐ ▝ ▐      ▐  ▐▘▐ ▐ ▝  ▐  ▐▘▐  ▛ ▘
   ▌ ▐   ▗▀▜  ▌   ▐  ▐▀▀ ▐ ▐ ▗▀▜      ▐  ▐▀▀  ▀▚  ▐  ▐▀▀  ▌  
   ▌ ▝▙▞ ▝▄▜  ▌   ▝▄ ▝▙▞ ▐ ▐ ▝▄▜      ▝▄ ▝▙▞ ▝▄▞  ▝▄ ▝▙▞  ▌  
   ▌                                                         
- ▀ "
+ ▀ \n$NORMAL"
 
 #START
 #   COMPILING
-echo "************************************************************"
+printf "$BLUE************************************************************ \n"
 
 make all
 make clean
 
-echo "************************************************************"
+printf "************************************************************* \n"
+printf "$NORMAL"
 
-#   CREATE IN- AND OUTFILE IF DOES NOT EXISTS
-if [ ! -f ./infile ] ; then touch ./infile && IN=1 ; fi
-if [ ! -f ./outfile ] ; then touch ./outfile && OUT=1 ; fi
+#   CREATE INFILE IF DOES NOT EXISTS
+if [ ! -s ./infile ] || [ -z ./infile ] ; then
+	printf "$YELLOW"
+	printf "============================================================= \n"
+	printf "WARNING: YOUR INFILE IS EMPTY OR NOT EXISTS \n"
+	printf "WARNING: CREATING DEFAULT INFILE... \n"
+	printf "============================================================= \n"
+	printf "$NORMAL"
+	
+	touch ./infile && IN=1
+
+fi
 
 #   TEST CASES
 
 i=0
 while [ $i -le $TESTS_N ]
 do
-	eval ${TESTS_SHELL[$i]} > $HIDDEN_SHELL
-	eval ${TESTS_PIPEX[$i]} > $HIDDEN_PIPEX
+	eval ${TESTS_SHELL[$i]} 2> /dev/null > $HIDDEN_SHELL
+	eval ${TESTS_PIPEX[$i]} 2> /dev/null > $HIDDEN_PIPEX
 
 	RESULT=$(diff $HIDDEN_SHELL $HIDDEN_PIPEX)
 	if [ -z "$RESULT" ]; then
-		echo "[$i] - OK"
-		echo ''
+		printf "$GREEN[$i] - OK"
+		printf "\t-->\t${TESTS_PIPEX[$i]} \n"
+
 	else
-		echo "[$i] - ERROR"
-		echo ''
+		printf "$RED[$i] - KO"
+		printf "\t-->\t${TESTS_PIPEX[$i]} \n"
 	fi
+	sleep 0.05
 	((i++))
 done
 
+#   DELETE FILES WHICH WAS CREATED BY THIS SCRIPT
 rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
-
-#   DELETE IN- OR/AND OUTFILE IF THEY WERE CREATED BY THIS SCRIPT
 if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
-if [ "$OUT" = 1 ] ; then rm -f ./outfile ; fi
