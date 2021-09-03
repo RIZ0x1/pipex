@@ -90,7 +90,7 @@ void	parent_process(int fds[2], char *arg3, char *arg4, char **envp, int child_p
 	char	**command;
 
 	waitpid(child_pid, NULL, 0);
-	file = open(arg4, O_WRONLY | O_CREAT | O_TRUNC, 664);
+	file = open(arg4, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	if (file == -1)
 		the_end(0);
 	dup2(fds[0], IN);

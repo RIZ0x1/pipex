@@ -10,26 +10,28 @@ YELLOW="\e[33m"
 
 #USEFUL VARS
 EXEC=./pipex
-HIDDEN_SHELL=.shell_file
-HIDDEN_PIPEX=.pipex_file
+HIDDEN_SHELL=.jcarlena_shell_file
+HIDDEN_PIPEX=.jcarlena_pipex_file
 
 declare -a TESTS_SHELL=(
 		" < infile ls | wc -c > $HIDDEN_SHELL "
 		" < infile cat | wc -c > $HIDDEN_SHELL " 
 		" < infile grep 1 | wc -c > $HIDDEN_SHELL " 
-		" < infile ping -c 2 google.com | wc -w > $HIDDEN_SHELL "
-		" < infile grep A -A 2 -B 3 | wc -l > $HIDDEN_SHELL " 
-		" < this_file_does_not_exists ls | wc -c > $HIDDEN_SHELL ")
+		" < infile ping -c 1 google.com | wc -w > $HIDDEN_SHELL "
+		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL " 
+		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL "
+		)
 
 declare -a TESTS_PIPEX=(
 		"./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX "
 		"./pipex infile 'cat' 'wc -c' $HIDDEN_PIPEX " 
 		"./pipex infile 'grep 1' 'wc -c' $HIDDEN_PIPEX "
-		"./pipex infile 'ping -c 2 google.com' 'wc -w' $HIDDEN_PIPEX "
-		"./pipex infile 'grep A -A 2 -B 3' 'wc -l' $HIDDEN_PIPEX " 
-		"./pipex this_file_does_not_exists 'ls' 'wc -c' $HIDDEN_PIPEX" )
+		"./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX "
+		"./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX "
+		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX" 
+		)
 
-TESTS_N=5
+TESTS_N=${#TESTS_SHELL[@]} # array length
 
 #WELCOME
 clear
@@ -44,7 +46,7 @@ printf "$RED_BLINK
 
 #START
 #   COMPILING
-printf "$BLUE************************************************************ \n"
+printf "$BLUE************************************************************* \n"
 
 make all
 make clean
@@ -56,8 +58,8 @@ printf "$NORMAL"
 if [ ! -s ./infile ] || [ -z ./infile ] ; then
 	printf "$YELLOW"
 	printf "============================================================= \n"
-	printf "WARNING: YOUR ./infile IS EMPTY OR NOT EXISTS \n"
-	printf "WARNING: CREATING DEFAULT INFILE... \n"
+	printf "WARNING: YOUR ./infile IS EMPTY OR DOES NOT EXIST \n"
+	printf "WARNING: CREATING DEFAULT ./infile ... \n"
 	printf "============================================================= \n"
 	printf "$NORMAL"
 	
@@ -76,7 +78,7 @@ fi
 
 #   TESTS RUNNING
 i=0
-while [ $i -le $TESTS_N ]
+while [ $i -lt $TESTS_N ]
 do
 	eval ${TESTS_SHELL[$i]} 2> /dev/null > $HIDDEN_SHELL
 	eval ${TESTS_PIPEX[$i]} 2> /dev/null > $HIDDEN_PIPEX
@@ -92,6 +94,15 @@ do
 	((i++))
 done
 
-#   DELETE FILES WHICH WAS CREATED BY THIS SCRIPT
-rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
+PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-rw-r--)
+if [ -f $HIDDEN_PIPEX ] ; then
+	if [ ! -z "$PERMISSIONS_TEST" ] ; then
+		printf "\n$GREEN[PERMISSIONS TEST] - OK\n"
+	else
+		printf "\n$RED[PERMISSIONS TEST] - KO\n"
+	fi
+fi
+
+#   DELETE FILES THAT WERE CREATED BY THIS SCRIPT
+#rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
 if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
