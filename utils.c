@@ -3,24 +3,25 @@
 #define IN 0
 #define OUT 1
 
-int	the_end(int exit)
+void	the_end(int ext)
 {
 	char	*error;
 
-	if (errno || exit)
-		write(2, "Error: ", 7U);
 	if (errno != 0)
 	{
 		error = strerror(errno);
 		write(2, error, ft_strlen(error));
 		write(2, "\n", 1);
-		return (errno);
+		exit(EXIT_FAILURE);
 	}
-	if (exit == ERR_ARG)
-		write(2, "Wrong number of arguments\n", 26U);
-	if (exit == ERR_NOTFOUND)
-		write(2, "pipex: command not found\n", 25U);
-	return ((errno || exit));
+	if (ext != 0)
+	{
+		if (ext == ERR_ARG)
+			write(2, "Error: Wrong number of arguments\n", 33U);
+		if (ext == ERR_NOTFOUND)
+			write(2, "Error: pipex: command not found\n", 32U);
+	}
+	exit(EXIT_SUCCESS);
 }
 
 char	**get_path_var(char **envp)

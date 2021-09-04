@@ -104,5 +104,5 @@ if [ -f $HIDDEN_PIPEX ] ; then
 fi
 
 #   DELETE FILES THAT WERE CREATED BY THIS SCRIPT
-#rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
-if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
+rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
+#if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
