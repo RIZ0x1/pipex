@@ -75,6 +75,7 @@ if [ ! -s ./infile ] || [ -z ./infile ] ; then
 	echo "Kratos: I am not the same man you found that day." >> ./infile
 	echo "    The monster you've created has returned... to kill you!" >> ./infile
 	echo "Ares: You have no idea what a true monster is Kratos!" >> ./infile
+	echo "    Your final lesson IS AT HAND!" >> ./infile
 fi
 
 #   TESTS RUNNING
@@ -114,4 +115,4 @@ fi
 
 #   DELETE FILES THAT WERE CREATED BY THIS SCRIPT
 rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
-#if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
+if [ "$IN" = 1 ] ; then rm -f ./infile ; fi

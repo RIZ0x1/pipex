@@ -4,12 +4,10 @@
 
 int	main(int argc, char **argv, char **envp)
 {
-	int	exit;
 	int	fds[2];
 	int	pid;
 
 	errno = 0;
-	exit = 0;
 	if (argc == 5)
 	{
 		if (pipe(fds) == -1)
