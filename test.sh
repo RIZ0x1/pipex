@@ -9,6 +9,7 @@ BLUE="\e[34m"
 YELLOW="\e[33m"
 
 #USEFUL VARS
+UNAME=$(uname)
 EXEC=./pipex
 HIDDEN_SHELL=.jcarlena_shell_file
 HIDDEN_PIPEX=.jcarlena_pipex_file
@@ -94,7 +95,15 @@ do
 	((i++))
 done
 
-PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-rw-r--)
+# ->	PERMISSIONS TEST
+
+if [ $UNAME == "Darwin" ] ; then
+	PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-r--r--)
+elif [ $UNAME == "Linux" ] ; then
+	PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-rw-r--)
+elif [ $UNAME == "Windows" ] ; then
+	echo "F#ck you, man... just go f%ck yourself"
+fi
 if [ -f $HIDDEN_PIPEX ] ; then
 	if [ ! -z "$PERMISSIONS_TEST" ] ; then
 		printf "\n$GREEN[PERMISSIONS TEST] - OK\n"
