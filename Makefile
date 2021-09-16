@@ -1,5 +1,5 @@
 CC		?=	gcc
-CFLAGS	:=	-g #-Wall -Wextra -Werror
+CFLAGS	:=	-Wall -Wextra -Werror
 NAME	=	pipex
 LIB		=	-L ./libft/ -l ft
 SRCS	=	main.c utils.c
