@@ -16,20 +16,22 @@ HIDDEN_PIPEX=.jcarlena_pipex_file
 
 declare -a TESTS_SHELL=(
 		" < infile ls | wc -c > $HIDDEN_SHELL "
-		" < infile cat | wc -c > $HIDDEN_SHELL " 
-		" < infile grep 1 | wc -c > $HIDDEN_SHELL " 
+		" < infile cat | wc -w > $HIDDEN_SHELL " 
+		" < infile grep 1 | wc -l > $HIDDEN_SHELL " 
 		" < infile ping -c 1 google.com | wc -w > $HIDDEN_SHELL "
 		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL " 
 		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL "
+		" < infile ls -R | wc -c > $HIDDEN_SHELL "
 		)
 
 declare -a TESTS_PIPEX=(
 		"./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX "
-		"./pipex infile 'cat' 'wc -c' $HIDDEN_PIPEX " 
-		"./pipex infile 'grep 1' 'wc -c' $HIDDEN_PIPEX "
+		"./pipex infile 'cat' 'wc -w' $HIDDEN_PIPEX " 
+		"./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX "
 		"./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX "
 		"./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX "
-		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX" 
+		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX "
+		"./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX "
 		)
 
 TESTS_N=${#TESTS_SHELL[@]} # array length
