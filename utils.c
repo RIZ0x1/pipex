@@ -69,7 +69,7 @@ char	*get_full_path(char *command, char **envp)
 	return (joined);
 }
 
-void	child_process(int fds[2], char *arg1, char *arg2, char **envp)
+void	child_process1(int fds[2], char *arg1, char *arg2, char **envp)
 {
 	int		file;
 	char	**command;
@@ -85,12 +85,12 @@ void	child_process(int fds[2], char *arg1, char *arg2, char **envp)
 		the_end(ERR_NOTFOUND);
 }
 
-void	parent_process(int fds[2], char *arg3, char *arg4, char **envp, int child_pid)
+void	child_process2(int fds[2], char *arg3, char *arg4, char **envp)
 {
 	int		file;
 	char	**command;
 
-	waitpid(child_pid, NULL, 0);
+	//waitpid(wait, NULL, 0);
 	file = open(arg4, O_WRONLY | O_CREAT | O_TRUNC,
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	if (file == -1)
@@ -101,5 +101,5 @@ void	parent_process(int fds[2], char *arg3, char *arg4, char **envp, int child_p
 	dup2(file, OUT);
 	command = ft_split(arg3, ' ');
 	if (execve(get_full_path(command[0], envp), command, envp) == -1)
-		the_end(ERR_NOTFOUND);
+		the_end(ERR_NOTFOUND);	
 }
