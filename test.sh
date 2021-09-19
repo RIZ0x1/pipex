@@ -11,27 +11,31 @@ YELLOW="\e[33m"
 #USEFUL VARS
 UNAME=$(uname)
 EXEC=./pipex
-HIDDEN_SHELL=.jcarlena_shell_file
-HIDDEN_PIPEX=.jcarlena_pipex_file
+HIDDEN_SHELL_OUT=.jcarlena_shell_out
+HIDDEN_PIPEX_OUT=.jcarlena_pipex_out
+HIDDEN_SHELL_ERR=.jcarlena_shell_err
+HIDDEN_PIPEX_ERR=.jcarlena_pipex_err
 
 declare -a TESTS_SHELL=(
-		" < infile ls | wc -c > $HIDDEN_SHELL "
-		" < infile cat | wc -w > $HIDDEN_SHELL " 
-		" < infile grep 1 | wc -l > $HIDDEN_SHELL " 
-		" < infile ping -c 1 google.com | wc -w > $HIDDEN_SHELL "
-		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL " 
-		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL "
-		" < infile ls -R | wc -c > $HIDDEN_SHELL "
+		" < infile ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < infile cat | wc -w > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
+		" < infile grep 1 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
+		" < infile ping -c 1 google.com | wc -w > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
+		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < infile ls -R | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < infile ls -R | cat -e > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
 		)
 
 declare -a TESTS_PIPEX=(
-		"./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX "
-		"./pipex infile 'cat' 'wc -w' $HIDDEN_PIPEX " 
-		"./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX "
-		"./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX "
-		"./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX "
-		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX "
-		"./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX "
+		"./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		"./pipex infile 'cat' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR" 
+		"./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		"./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		"./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		"./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
 		)
 
 TESTS_N=${#TESTS_SHELL[@]} # array length
@@ -84,11 +88,12 @@ fi
 i=0
 while [ $i -lt $TESTS_N ]
 do
-	eval ${TESTS_SHELL[$i]} 2> /dev/null > $HIDDEN_SHELL
-	eval ${TESTS_PIPEX[$i]} 2> /dev/null > $HIDDEN_PIPEX
+	eval ${TESTS_SHELL[$i]}
+	eval ${TESTS_PIPEX[$i]}
 
-	RESULT=$(diff $HIDDEN_SHELL $HIDDEN_PIPEX)
-	if [ -z "$RESULT" ]; then
+	RESULT_OUT=$(diff $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_OUT)
+	RESULT_ERR=$(diff $HIDDEN_SHELL_ERR $HIDDEN_PIPEX_ERR)
+	if [ -z "$RESULT_OUT" ] && [ -z "$RESULT_ERR" ] ; then
 		printf "$GREEN[$i] - OK"
 	else
 		printf "$RED[$i] - KO"
@@ -116,5 +121,5 @@ if [ -f $HIDDEN_PIPEX ] ; then
 fi
 
 #   DELETE FILES THAT WERE CREATED BY THIS SCRIPT
-rm -f $HIDDEN_PIPEX $HIDDEN_SHELL
+#rm -f $HIDDEN_PIPEX_OUT $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_ERR $HIDDEN_SHELL_ERR
 if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
