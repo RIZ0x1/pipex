@@ -55,4 +55,5 @@ dkms.conf
 *.txt
 .vscode
 .vscode/*
+.jcarlena_*
 
