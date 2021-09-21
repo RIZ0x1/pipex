@@ -4,9 +4,9 @@
 NORMAL="\e[0m"
 RED="\e[31;1;1m"
 RED_BLINK="\e[31;1;5m"
-GREEN="\e[32m"
+GREEN="\e[32;1;1m"
 BLUE="\e[34m"
-YELLOW="\e[33m"
+YELLOW="\e[33;1;1m"
 
 #USEFUL VARS
 UNAME=$(uname)
@@ -15,6 +15,8 @@ HIDDEN_SHELL_OUT=.jcarlena_shell_out
 HIDDEN_PIPEX_OUT=.jcarlena_pipex_out
 HIDDEN_SHELL_ERR=.jcarlena_shell_err
 HIDDEN_PIPEX_ERR=.jcarlena_pipex_err
+HIDDEN_DIFF_OUT=.jcarlena_diff_out
+HIDDEN_DIFF_ERR=.jcarlena_diff_err
 
 declare -a TESTS_SHELL=(
 		" < infile ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
@@ -22,9 +24,9 @@ declare -a TESTS_SHELL=(
 		" < infile grep 1 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
 		" < infile ping -c 1 google.com | wc -w > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
 		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
-		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
 		" < infile ls -R | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
 		" < infile ls -R | cat -e > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR"
 		)
 
 declare -a TESTS_PIPEX=(
@@ -33,14 +35,15 @@ declare -a TESTS_PIPEX=(
 		"./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
 		"./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
 		"./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
 		"./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
 		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
 		)
 
 TESTS_N=${#TESTS_SHELL[@]} # array length
 
 #WELCOME
+
 clear
 printf "$RED_BLINK
   ▘             ▝▜                   ▗           ▗          
@@ -91,15 +94,16 @@ do
 	eval ${TESTS_SHELL[$i]}
 	eval ${TESTS_PIPEX[$i]}
 
-	RESULT_OUT=$(diff $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_OUT)
-	RESULT_ERR=$(diff $HIDDEN_SHELL_ERR $HIDDEN_PIPEX_ERR)
-	if [ -z "$RESULT_OUT" ] && [ -z "$RESULT_ERR" ] ; then
+	sleep 0.08
+	eval diff $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_OUT > $HIDDEN_DIFF_OUT
+	eval diff $HIDDEN_SHELL_ERR $HIDDEN_PIPEX_ERR > $HIDDEN_DIFF_ERR
+
+	if [ ! -s $HIDDEN_DIFF_OUT ] && [ ! -s $HIDDEN_DIFF_ERR ] ; then
 		printf "$GREEN[$i] - OK"
 	else
 		printf "$RED[$i] - KO"
 	fi
 	printf "\t-->\t${TESTS_PIPEX[$i]} \n"
-	sleep 0.05
 	((i++))
 done
 
@@ -110,7 +114,8 @@ if [ $UNAME == "Darwin" ] ; then
 elif [ $UNAME == "Linux" ] ; then
 	PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-rw-r--)
 elif [ $UNAME == "Windows" ] ; then
-	echo "F#ck you, man... just go f%ck yourself"
+	echo "F#ck you, (wo)man... just go f%ck yourself"
+	exit 69
 fi
 if [ -f $HIDDEN_PIPEX ] ; then
 	if [ ! -z "$PERMISSIONS_TEST" ] ; then
@@ -121,5 +126,5 @@ if [ -f $HIDDEN_PIPEX ] ; then
 fi
 
 #   DELETE FILES THAT WERE CREATED BY THIS SCRIPT
-#rm -f $HIDDEN_PIPEX_OUT $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_ERR $HIDDEN_SHELL_ERR
+rm -f $HIDDEN_PIPEX_OUT $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_ERR $HIDDEN_SHELL_ERR $HIDDEN_DIFF_ERR $HIDDEN_DIFF_OUT
 if [ "$IN" = 1 ] ; then rm -f ./infile ; fi
