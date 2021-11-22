@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/06 08:19:22 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/11/06 08:19:24 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 15:43:40 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_putnbr_fd(int nbr, int fd)
 {
-	long int nb;
+	long int	nb;
 
 	nb = (long int)nbr;
 	if (nbr < 0)

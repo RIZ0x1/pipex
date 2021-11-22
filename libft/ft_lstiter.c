@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/12 07:16:38 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/11/12 07:16:48 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 16:19:20 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 void	ft_lstiter(t_list *lst, void (*f)(void *))
 {
 	if (lst)
+	{
 		while (lst != NULL)
 		{
 			f(lst->content);
 			lst = lst->next;
 		}
+	}
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jcarlena <jcarlena@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/31 17:11:20 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/11/04 04:05:22 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/11/22 18:31:53 by jcarlena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_atoi(const char *str)
+int	ft_atoi(const char *str)
 {
 	int			neg;
 	long int	sum;

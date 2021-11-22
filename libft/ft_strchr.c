@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/31 15:08:28 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/10/31 15:08:29 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 15:35:49 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 char	*ft_strchr(const char *s, int c)
 {
-	char *p;
+	char	*p;
 
-	p = (char*)s;
+	p = (char *)s;
 	while (*p)
 	{
 		if (*p == (char)c)

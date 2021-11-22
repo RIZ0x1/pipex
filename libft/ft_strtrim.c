@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/05 04:06:34 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/11/05 04:06:36 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 15:19:41 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ char	*ft_strtrim(char const *s1, char const *set)
 	end = ft_strlen(s1);
 	while (end && ft_strchr(set, s1[end]))
 		end--;
-	return (ft_substr((char*)s1, 0, end + 1));
+	return (ft_substr((char *)s1, 0, end + 1));
 }

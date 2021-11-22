@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/04 23:25:55 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/11/04 23:25:57 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 15:35:20 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1)
 		return (NULL);
 	size = ft_strlen(s1) + ft_strlen(s2);
-	if ((p = ft_calloc(size + 1, sizeof(s1))) == NULL)
+	p = ft_calloc(size + 1, sizeof(s1));
+	if (p == NULL)
 		return (NULL);
 	k = p;
 	while (*s1)

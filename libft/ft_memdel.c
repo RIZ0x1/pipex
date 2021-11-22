@@ -1,36 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   ft_memdel.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jcarlena <jcarlena@student.21-school.ru    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/10/31 13:44:15 by jcarlena          #+#    #+#             */
-/*   Updated: 2021/09/16 19:58:04 by jcarlena         ###   ########.fr       */
+/*   Created: 2020/11/06 08:12:10 by jcarlena          #+#    #+#             */
+/*   Updated: 2021/11/05 06:36:36 by jcarlena         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
+void	ft_memdel(void *ptr)
 {
-	char	*p;
-	size_t	i;
-	size_t	len;
-
-	i = 0;
-	len = 0;
-	p = (char *)src;
-	if (!dst || !src)
-		return (0);
-	len = ft_strlen(p);
-	if (!dstsize)
-		return (len);
-	while (i < (dstsize - 1) && p[i])
+	if (ptr)
 	{
-		dst[i] = p[i];
-		(i++);
+		free(ptr);
+		ptr = NULL;
 	}
-	dst[i] = '\0';
-	return (len);
 }

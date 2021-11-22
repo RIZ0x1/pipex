@@ -10,7 +10,6 @@ YELLOW="\e[33;1;1m"
 
 #USEFUL VARS
 UNAME=$(uname)
-EXEC=./pipex
 HIDDEN_SHELL_OUT=.jcarlena_shell_out
 HIDDEN_PIPEX_OUT=.jcarlena_pipex_out
 HIDDEN_SHELL_ERR=.jcarlena_shell_err
@@ -30,14 +29,14 @@ declare -a TESTS_SHELL=(
 		)
 
 declare -a TESTS_PIPEX=(
-		"./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		"./pipex infile 'cat' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR" 
-		"./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		"./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		"./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		"./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
-		"./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR"
+		" ./pipex infile 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile 'cat' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR " 
+		" ./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		)
 
 TESTS_N=${#TESTS_SHELL[@]} # array length
@@ -89,19 +88,19 @@ fi
 
 #   TESTS RUNNING
 i=0
-while [ $i -lt $TESTS_N ]
+while [ $i -lt "$TESTS_N" ]
 do
-	eval ${TESTS_SHELL[$i]}
-	eval ${TESTS_PIPEX[$i]}
+	eval "${TESTS_SHELL[$i]}"
+	eval "${TESTS_PIPEX[$i]}"
 
 	sleep 0.08
 	eval diff $HIDDEN_SHELL_OUT $HIDDEN_PIPEX_OUT > $HIDDEN_DIFF_OUT
 	eval diff $HIDDEN_SHELL_ERR $HIDDEN_PIPEX_ERR > $HIDDEN_DIFF_ERR
 
 	if [ ! -s $HIDDEN_DIFF_OUT ] && [ ! -s $HIDDEN_DIFF_ERR ] ; then
-		printf "$GREEN[$i] - OK"
+		printf "$GREEN%s" "[$i] - OK"
 	else
-		printf "$RED[$i] - KO"
+		printf "$RED%s" "[$i] - KO"
 	fi
 	printf "\t-->\t${TESTS_PIPEX[$i]} \n"
 	((i++))
@@ -109,20 +108,30 @@ done
 
 # ->	PERMISSIONS TEST
 
-if [ $UNAME == "Darwin" ] ; then
+if [ "$UNAME" == "Darwin" ] ; then
 	PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-r--r--)
-elif [ $UNAME == "Linux" ] ; then
+elif [ "$UNAME" == "Linux" ] ; then
 	PERMISSIONS_TEST=$(ls -l $HIDDEN_PIPEX | grep rw-rw-r--)
-elif [ $UNAME == "Windows" ] ; then
+elif [ "$UNAME" == "Windows" ] ; then
 	echo "F#ck you, (wo)man... just go f%ck yourself"
 	exit 69
 fi
 if [ -f $HIDDEN_PIPEX ] ; then
 	if [ ! -z "$PERMISSIONS_TEST" ] ; then
-		printf "\n$GREEN[PERMISSIONS TEST] - OK\n"
+		printf "\n$GREEN %s\n" "[PERMISSIONS TEST] - OK"
 	else
-		printf "\n$RED[PERMISSIONS TEST] - KO\n"
+		printf "\n$RED %s\n" "[PERMISSIONS TEST] - KO"
 	fi
+fi
+
+# ->	NORME TEST
+
+NORME=$(norminette . | grep 'Error:')
+
+if [ ! "$NORME" ] ; then
+	printf "$GREEN %s\n" "[NORME TEST] - OK"
+else
+	printf "$RED %s\n" "[NORME TEST] - KO"
 fi
 
 #   DELETE FILES THAT WERE CREATED BY THIS SCRIPT

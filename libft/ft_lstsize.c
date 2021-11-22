@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/12 04:39:35 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/11/12 04:39:45 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 16:12:40 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ int	ft_lstsize(t_list *lst)
 
 	n = 0;
 	if (lst)
+	{
 		while (lst != NULL)
 		{
 			lst = lst->next;
 			(n++);
 		}
+	}
 	return (n);
 }

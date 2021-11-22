@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_utoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jcarlena <jcarlena@student.21-school.ru    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/22 18:37:27 by jcarlena          #+#    #+#             */
+/*   Updated: 2021/11/22 18:38:05 by jcarlena         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "libft.h"
 
@@ -20,7 +31,8 @@ char	*ft_utoa(unsigned int n)
 	size_t		len;
 
 	len = ft_getnbrlen(n);
-	if (!(s = ft_calloc(len + 2, sizeof(char))))
+	s = ft_calloc(len + 2, sizeof(char));
+	if (!s)
 		return (NULL);
 	if (n == 0)
 	{

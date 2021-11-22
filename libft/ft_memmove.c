@@ -6,7 +6,7 @@
 /*   By: jcarlena <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/10/30 20:28:32 by jcarlena          #+#    #+#             */
-/*   Updated: 2020/10/30 20:28:35 by jcarlena         ###   ########.fr       */
+/*   Updated: 2021/09/10 16:10:47 by tasian           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,18 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 	char	*ps;
 
 	i = 0;
-	pd = (char*)dst;
-	ps = (char*)src;
+	pd = (char *)dst;
+	ps = (char *)src;
 	if (pd > ps)
 		while (len--)
 			pd[len] = ps[len];
 	else if (ps > pd)
+	{
 		while (i < len)
 		{
 			pd[i] = ps[i];
 			(i++);
 		}
+	}
 	return (dst);
 }
