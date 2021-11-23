@@ -25,7 +25,8 @@ declare -a TESTS_SHELL=(
 		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
 		" < infile ls -R | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
 		" < infile ls -R | cat -e > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
-		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR"
+		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < infile /usr/bin/ls | /usr/bin/wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
 		)
 
 declare -a TESTS_PIPEX=(
@@ -37,6 +38,7 @@ declare -a TESTS_PIPEX=(
 		" ./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile '/usr/bin/ls' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		)
 
 TESTS_N=${#TESTS_SHELL[@]} # array length
