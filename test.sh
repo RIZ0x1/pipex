@@ -38,7 +38,7 @@ declare -a TESTS_PIPEX=(
 		" ./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
-		" ./pipex infile '/usr/bin/ls' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile '/usr/bin/ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		)
 
 TESTS_N=${#TESTS_SHELL[@]} # array length
@@ -120,9 +120,9 @@ elif [ "$UNAME" == "Windows" ] ; then
 fi
 if [ -f $HIDDEN_PIPEX ] ; then
 	if [ ! -z "$PERMISSIONS_TEST" ] ; then
-		printf "\n$GREEN %s\n" "[PERMISSIONS TEST] - OK"
+		printf "\n$GREEN%s\n" "[PERMISSIONS TEST] - OK"
 	else
-		printf "\n$RED %s\n" "[PERMISSIONS TEST] - KO"
+		printf "\n$RED%s\n" "[PERMISSIONS TEST] - KO"
 	fi
 fi
 
@@ -131,9 +131,9 @@ fi
 NORME=$(norminette . | grep 'Error:')
 
 if [ ! "$NORME" ] ; then
-	printf "$GREEN %s\n" "[NORME TEST] - OK"
+	printf "$GREEN%s\n" "[NORME TEST] - OK"
 else
-	printf "$RED %s\n" "[NORME TEST] - KO"
+	printf "$RED%s\n" "[NORME TEST] - KO"
 fi
 
 #   DELETE FILES THAT WERE CREATED BY THIS SCRIPT
