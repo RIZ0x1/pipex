@@ -24,7 +24,7 @@ re: fclean all
 
 test:
 	rm -f $(TEST_FILES)
-	bash $(TEST)
+	bash $(TEST) 2> /dev/null
 
 $(NAME): $(OBJS) $(LIB)
 	$(CC) $(OBJS) $(LIB) -o $(NAME)

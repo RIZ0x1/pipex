@@ -17,16 +17,20 @@ HIDDEN_PIPEX_ERR=.jcarlena_pipex_err
 HIDDEN_DIFF_OUT=.jcarlena_diff_out
 HIDDEN_DIFF_ERR=.jcarlena_diff_err
 
+LS_PATH=$(whereis ls)
+WC_PATH=$(whereis wc)
+
 declare -a TESTS_SHELL=(
-		" < infile ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
-		" < infile cat | wc -w > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
-		" < infile grep 1 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
-		" < infile ping -c 1 google.com | wc -w > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
-		" < infile grep A -B 3 | wc -l > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR " 
-		" < infile ls -R | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
-		" < infile ls -R | cat -e > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
-		" < this_file_does_not_exist ls | wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
-		" < infile /usr/bin/ls | /usr/bin/wc -c > $HIDDEN_SHELL_OUT 2> $HIDDEN_SHELL_ERR "
+		" < infile ls 2> $HIDDEN_SHELL_ERR | wc -c > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
+		" < infile cat 2> $HIDDEN_SHELL_ERR | wc -w > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR " 
+		" < infile grep 1 2> $HIDDEN_SHELL_ERR | wc -l > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR " 
+		" < infile ping -c 1 google.com 2> $HIDDEN_SHELL_ERR | wc -w > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
+		" < infile ping -c 1 this-site-does-not-exist.cam 2> $HIDDEN_SHELL_ERR | wc > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
+		" < infile grep A -B 3 2> $HIDDEN_SHELL_ERR | wc -l > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR " 
+		" < infile ls -R 2> $HIDDEN_SHELL_ERR | wc -c > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
+		" < infile ls -R 2> $HIDDEN_SHELL_ERR | cat -e > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
+		" < this_file_does_not_exist ls 2> $HIDDEN_SHELL_ERR | wc -c > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
+		" < infile $LS_PATH 2> $HIDDEN_SHELL_ERR | $WC_PATH > $HIDDEN_SHELL_OUT 2>> $HIDDEN_SHELL_ERR "
 		)
 
 declare -a TESTS_PIPEX=(
@@ -34,14 +38,15 @@ declare -a TESTS_PIPEX=(
 		" ./pipex infile 'cat' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR " 
 		" ./pipex infile 'grep 1' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex infile 'ping -c 1 google.com' 'wc -w' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile 'ping -c 1 this-site-does-not-exist.cam' wc $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex infile 'grep A -B 3' 'wc -l' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex infile 'ls -R' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex infile 'ls -R' 'cat -e' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		" ./pipex this_file_does_not_exist 'ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
-		" ./pipex infile '/usr/bin/ls' 'wc -c' $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
+		" ./pipex infile $LS_PATH $WC_PATH $HIDDEN_PIPEX_OUT 2> $HIDDEN_PIPEX_ERR "
 		)
 
-TESTS_N=${#TESTS_SHELL[@]} # array length
+TESTS_N=${#TESTS_SHELL[@]} # tests array length
 
 #WELCOME
 
@@ -56,7 +61,7 @@ printf "$RED_BLINK
  ▀ \n$NORMAL"
 
 #START
-#   COMPILING
+# ->	COMPILING
 printf "$BLUE************************************************************* \n"
 
 make all
@@ -65,8 +70,8 @@ make clean
 printf "************************************************************* \n"
 printf "$NORMAL"
 
-#   CREATE INFILE IF DOES NOT EXISTS
-if [ ! -s ./infile ] || [ -z ./infile ] ; then
+# ->	CREATE INFILE IF DOES NOT EXISTS
+if [ ! -s ./infile ] ; then
 	printf "$YELLOW"
 	printf "============================================================= \n"
 	printf "WARNING: YOUR ./infile IS EMPTY OR DOES NOT EXIST \n"
@@ -88,7 +93,7 @@ if [ ! -s ./infile ] || [ -z ./infile ] ; then
 	echo "    Your final lesson IS AT HAND!" >> ./infile
 fi
 
-#   TESTS RUNNING
+# ->	TESTS RUNNING
 i=0
 while [ $i -lt "$TESTS_N" ]
 do
