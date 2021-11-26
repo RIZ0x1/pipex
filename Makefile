@@ -1,12 +1,13 @@
 CC			?=	gcc
 CFLAGS		:=	-Wall -Wextra -Werror
 NAME		=	pipex
-LIB			=	-L ./libft/ -l ft
+DEPS		=	-L ./libft/ -l ft
+
+LIB			=	./libft/libft.a
 SRCS		=	main.c utils.c
 OBJS		=	main.o utils.o
 HDRS		=	header.h
 TEST		=	test.sh
-TEST_FILES	=	.jcarlena_pipex_err .jcarlena_pipex_out .jcarlena_shell_err .jcarlena_shell_out
 
 .PHONY: all clean fclean re test
 
@@ -23,11 +24,10 @@ fclean: clean
 re: fclean all
 
 test:
-	rm -f $(TEST_FILES)
 	bash $(TEST) 2> /dev/null
 
 $(NAME): $(OBJS) $(LIB)
-	$(CC) $(OBJS) $(LIB) -o $(NAME)
+	$(CC) $(OBJS) $(DEPS) -o $(NAME)
 
 $(OBJS): $(SRCS) $(HDRS)
 	$(CC) $(CFLAGS) $(SRCS) -c
